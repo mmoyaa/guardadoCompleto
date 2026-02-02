@@ -1,9 +1,27 @@
 import { Injectable } from '@angular/core';
 
+export interface DatosPersonales {
+  nombre: string;
+  edad: number | null;
+  email: string;
+}
+
+export interface DatosDireccion {
+  calle: string;
+  ciudad: string;
+  codigoPostal: string;
+}
+
+export interface DatosPreferencias {
+  idioma: string;
+  tema: string;
+  notificaciones: boolean;
+}
+
 export interface DatosCompletos {
-  subcomponente1: any;
-  subcomponente2: any;
-  subcomponente3: any;
+  subcomponente1: DatosPersonales;
+  subcomponente2: DatosDireccion;
+  subcomponente3: DatosPreferencias;
   timestamp: Date;
 }
 

@@ -36,7 +36,7 @@ export class Componente1Component {
       subcomponente1: this.subcomp1.obtenerDatos(),
       subcomponente2: this.subcomp2.obtenerDatos(),
       subcomponente3: this.subcomp3.obtenerDatos(),
-      timestamp: new Date()
+      timestamp: new Date() // Timestamp will be updated by the service
     };
 
     // Los empaqueta en un objeto completo y los guarda mediante el servicio DatosService

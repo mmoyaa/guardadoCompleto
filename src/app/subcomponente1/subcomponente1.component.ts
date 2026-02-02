@@ -25,7 +25,7 @@ import { Component } from '@angular/core';
 export class Subcomponente1Component {
   datos = {
     nombre: '',
-    edad: null,
+    edad: null as number | null,
     email: ''
   };
 
