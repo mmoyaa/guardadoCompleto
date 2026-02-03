@@ -17,28 +17,124 @@
   font-size: 1.2rem;
 }
 
-.form-group {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
+.tabla-container {
+  width: 100%;
+  overflow-x: auto;
 }
 
-.form-group label {
-  color: #065f46;
-  font-weight: 500;
-  font-size: 0.9rem;
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-.form-group input {
-  padding: 0.75rem;
+thead {
+  background-color: #059669;
+  color: white;
+}
+
+th {
+  padding: 1rem;
+  text-align: left;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+td {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid #d1fae5;
+}
+
+.fila-input {
+  background-color: #f0fdf4;
+}
+
+.fila-registro {
+  background-color: white;
+}
+
+.fila-registro:hover {
+  background-color: #f0fdf4;
+}
+
+td input {
+  width: 100%;
+  padding: 0.5rem;
   border: 2px solid #6ee7b7;
-  border-radius: 6px;
-  font-size: 1rem;
+  border-radius: 4px;
+  font-size: 0.9rem;
   transition: border-color 0.3s;
 }
 
-.form-group input:focus {
+td input:focus {
   outline: none;
   border-color: #10b981;
   box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+}
+
+.rut-encontrado {
+  padding: 0.5rem;
+  border-radius: 4px;
+  font-weight: 500;
+  display: inline-block;
+  color: #dc2626;
+  background-color: #fee2e2;
+}
+
+.rut-encontrado.encontrado {
+  color: #059669;
+  background-color: #d1fae5;
+}
+
+.btn-agregar,
+.btn-eliminar {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 4px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+  font-size: 0.9rem;
+}
+
+.btn-agregar {
+  background-color: #10b981;
+  color: white;
+}
+
+.btn-agregar:hover:not(:disabled) {
+  background-color: #059669;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(16, 185, 129, 0.3);
+}
+
+.btn-agregar:disabled {
+  background-color: #d1d5db;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.btn-eliminar {
+  background-color: #ef4444;
+  color: white;
+}
+
+.btn-eliminar:hover {
+  background-color: #dc2626;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(239, 68, 68, 0.3);
+}
+
+.info-registros {
+  margin-top: 1rem;
+  padding: 0.75rem;
+  background-color: white;
+  border-radius: 4px;
+  text-align: center;
+  font-weight: 600;
+  color: #059669;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }

@@ -1,7 +1,62 @@
 <div class="sub-componente">
   <h3>Componente 2c</h3>
-  <div class="form-group">
-    <label for="input2c">Input Componente 2c:</label>
-    <input id="input2c" type="text" [(ngModel)]="dato" placeholder="Ingrese dato 2c">
+  
+  <div class="tabla-container">
+    <form [formGroup]="registroForm">
+      <table>
+        <thead>
+          <tr>
+            <th>Nombre</th>
+            <th>Apellido</th>
+            <th>Buscador RUT</th>
+            <th>RUT Encontrado</th>
+            <th>Acción</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Fila de ingreso de datos -->
+          <tr class="fila-input">
+            <td>
+              <input type="text" formControlName="nombre" placeholder="Nombre">
+            </td>
+            <td>
+              <input type="text" formControlName="apellido" placeholder="Apellido">
+            </td>
+            <td>
+              <input type="text" formControlName="rutBuscado" placeholder="Ej: 11111111-1">
+            </td>
+            <td>
+              <span class="rut-encontrado" [class.encontrado]="rutEncontrado">
+                {{ rutEncontrado || 'No encontrado' }}
+              </span>
+            </td>
+            <td>
+              <button 
+                type="button"
+                class="btn-agregar" 
+                (click)="agregarRegistro()" 
+                [disabled]="!puedeAgregar()">
+                Agregar
+              </button>
+            </td>
+          </tr>
+          
+          <!-- Registros agregados -->
+          <tr *ngFor="let registro of registros; let i = index" class="fila-registro">
+            <td>{{ registro.nombre }}</td>
+            <td>{{ registro.apellido }}</td>
+            <td>{{ registro.rutBuscado }}</td>
+            <td>{{ registro.rutEncontrado }}</td>
+            <td>
+              <button type="button" class="btn-eliminar" (click)="eliminarRegistro(i)">Eliminar</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </form>
+    
+    <div class="info-registros">
+      <p>Registros: {{ registros.length }} / 3</p>
+    </div>
   </div>
 </div>
