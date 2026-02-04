@@ -262,3 +262,38 @@
   </div>
 </div>
 <div class="modal-backdrop fade" [class.show]="mostrarModal" *ngIf="mostrarModal"></div>
+
+
+
+<span>
+Errores en el HTML original:
+Falta de FormGroups en el componente TypeScript - El componente estaba vacío, no tenía definidos formGeneral ni puertosForm
+
+Falta de directivas [formGroup] en el HTML - Los inputs con formControlName necesitan estar dentro de un contenedor con [formGroup], de lo contrario Angular genera errores y no renderiza correctamente:
+
+<!-- ANTES (error) -->
+<!-- <div class="detalle-expandido">
+  <input formControlName="emergencia"> -->
+   <!-- ❌ Sin FormGroup padre -->
+
+<!-- AHORA (correcto) -->
+<!-- <div class="detalle-expandido" [formGroup]="formGeneral">
+  <input formControlName="emergencia"> -->
+   <!-- ✅ Tiene FormGroup padre -->
+
+<!-- FormControls mezclados sin separación - Las cards de puertos intentaban usar formControlName pero no estaban dentro de un [formGroup]="puertosForm" dedicado
+
+Errores de renderizado de Angular - Cuando Angular encuentra formControlName sin un FormGroup padre, genera errores en consola y puede no renderizar correctamente el DOM, causando que se vea cortado -->
+
+
+
+Lo que se corrigió:
+<!-- Se agregó [formGroup] en los lugares correctos -->
+<!-- <div [formGroup]="formGeneral"> -->
+  <!-- controles generales -->
+  
+  <!-- <div [formGroup]="puertosForm"> -->
+    <!-- controles de puertos -->
+  <!-- </div>
+</div> -->
+</span>
