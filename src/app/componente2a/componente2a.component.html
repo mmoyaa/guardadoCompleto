@@ -4,4 +4,61 @@
     <label for="input2a">Input Componente 2a:</label>
     <input id="input2a" type="text" [(ngModel)]="dato" placeholder="Ingrese dato 2a">
   </div>
+
+  <form [formGroup]="form">
+    <div class="seccion">
+      <div class="titulo">Comunicaciones Utilizadas</div>
+
+      <div class="fila" formGroupName="comunicacionNueva">
+        <div class="campo">
+          <label>Tipo</label>
+          <select class="form-control" formControlName="tipo">
+            <option value="" disabled>Seleccione</option>
+            <option *ngFor="let t of tipos" [value]="t">{{ t }}</option>
+          </select>
+          <small class="error" *ngIf="comunicacionNueva.get('tipo')?.touched && comunicacionNueva.get('tipo')?.invalid">
+            Seleccione un tipo
+          </small>
+        </div>
+
+        <div class="campo">
+          <label>Tiempo (HH:MM)</label>
+          <input class="form-control" type="time" formControlName="tiempo" />
+          <small class="error" *ngIf="comunicacionNueva.get('tiempo')?.touched && comunicacionNueva.get('tiempo')?.invalid">
+            Ingrese un tiempo válido (HH:MM)
+          </small>
+        </div>
+
+        <div class="campo botonera">
+          <button type="button" class="btn btn-primary btn-agregar" (click)="agregar()">
+            Agregar
+          </button>
+        </div>
+      </div>
+
+      <div class="tabla-wrap" *ngIf="comunicaciones.length > 0">
+        <table class="tabla">
+          <thead>
+            <tr>
+              <th>Tipo</th>
+              <th>Tiempo (HH:MM)</th>
+              <th class="accion">Acción</th>
+            </tr>
+          </thead>
+
+          <tbody formArrayName="comunicaciones">
+            <tr *ngFor="let ctrl of comunicaciones.controls; let i = index; trackBy: trackByIndex" [formGroupName]="i">
+              <td>{{ ctrl.get('tipo')?.value }}</td>
+              <td>{{ ctrl.get('tiempo')?.value }}</td>
+              <td class="accion">
+                <button type="button" class="btn btn-danger btn-eliminar" (click)="eliminar(i)">
+                  Eliminar
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </form>
 </div>

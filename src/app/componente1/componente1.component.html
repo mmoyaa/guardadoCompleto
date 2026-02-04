@@ -1,4 +1,78 @@
 <div class="componente">
   <h2>{{ titulo }}</h2>
-  <p>Este es el primer componente de la aplicación</p>
+ <div class="layout">
+  <div id="map" class="map"></div>
+
+  <form [formGroup]="geoForm" class="panel">
+    <div class="row">
+      <label>Obtenido por</label>
+      <select formControlName="obtenidoPor" class="form-control">
+        <option value="">Seleccione</option>
+        <option value="EMA">ESTACIÓN METEOROLÓGICA AUTOMÁTICA</option>
+        <option value="FARO">FARO</option>
+        <option value="NAVE">NAVE</option>
+        <option value="PERSONA">PERSONA</option>
+        <option value="SM">SERVICIO METEOROLÓGICO</option>
+      </select>
+    </div>
+
+    <div class="row">
+      <label>N° Carta referencia</label>
+      <input class="form-control" formControlName="cartaRef" placeholder="Ej: SHOA 1234" />
+    </div>
+
+    <hr />
+
+    <div class="grid2">
+      <div>
+        <h4>LATITUD</h4>
+        <div class="grid3">
+          <select class="form-control" formControlName="latG">
+            <option *ngFor="let g of latGrados" [value]="g">{{ g }}</option>
+          </select>
+          <select class="form-control" formControlName="latM">
+            <option *ngFor="let m of mmss" [value]="m">{{ m }}</option>
+          </select>
+          <select class="form-control" formControlName="latS">
+            <option *ngFor="let s of mmss" [value]="s">{{ s }}</option>
+          </select>
+        </div>
+
+        <select class="form-control mt" formControlName="latHemi">
+          <option value="S">Sur (S)</option>
+          <option value="N">Norte (N)</option>
+        </select>
+      </div>
+
+      <div>
+        <h4>LONGITUD</h4>
+        <div class="grid3">
+          <select class="form-control" formControlName="lonG">
+            <option *ngFor="let g of lonGrados" [value]="g">{{ g }}</option>
+          </select>
+          <select class="form-control" formControlName="lonM">
+            <option *ngFor="let m of mmss" [value]="m">{{ m }}</option>
+          </select>
+          <select class="form-control" formControlName="lonS">
+            <option *ngFor="let s of mmss" [value]="s">{{ s }}</option>
+          </select>
+        </div>
+
+        <select class="form-control mt" formControlName="lonHemi">
+          <option value="W">Oeste (W)</option>
+          <option value="E">Este (E)</option>
+        </select>
+      </div>
+    </div>
+
+    <button type="button" class="btn" (click)="centrarConInputs()">
+      Mostrar ubicación ingresada
+    </button>
+
+    <button type="button" class="btn btn-light" (click)="irAMiUbicacion()">
+      Volver a mi ubicación
+    </button>
+  </form>
+</div>
+
 </div>
