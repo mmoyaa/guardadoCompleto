@@ -1,0 +1,264 @@
+<div class="container-fluid p-4">
+  
+  <!-- Título como acordeón -->
+  <div class="accordion-header" (click)="toggleAcordeon()">
+    <h2 class="mb-0">
+      <span class="accordion-icon">{{ acordeonAbierto ? '▼' : '▶' }}</span>
+      {{ titulo }}
+    </h2>
+  </div>
+
+  <!-- Contenido del acordeón -->
+  <div class="accordion-content" *ngIf="acordeonAbierto">
+    
+    <!-- Botón para abrir modal -->
+    <div class="mb-3 mt-3">
+      <button type="button" class="btn btn-primary" (click)="abrirModal()">
+        Agregar Nave
+      </button>
+    </div>
+
+    <div class="tab-pane fade show active border p-3">
+
+    <!-- SIN naves -->
+    <div *ngIf="resultadoNavesSeleccionadas.length === 0" class="text-muted">
+      Sin naves seleccionadas
+    </div>
+
+    <!-- LISTA -->
+    <div class="list-group" *ngIf="resultadoNavesSeleccionadas.length > 0">
+
+      <div class="list-group-item" *ngFor="let r of resultadoNavesSeleccionadas">
+
+        <!-- HEADER -->
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+
+          <span class="fw-semibold nave-click"
+                role="button"
+                (click)="toggleDetalle(r.id)">
+            {{r.nombre}} ({{r.senal}})
+          </span>
+
+          <div class="d-flex gap-2">
+            <button type="button" class="btn btn-success btn-sm">
+              Ver ficha y documento
+            </button>
+
+            <button type="button"
+                    class="btn btn-outline-danger btn-sm"
+                        (click)="eliminarResultado(r.id)">
+              <i class="bi bi-trash"></i>
+            </button>
+          </div>
+
+        </div>
+
+
+        <!-- ================= DETALLE ================= -->
+        <div *ngIf="r.detalleAbierto" class="detalle-expandido mt-3" [formGroup]="formGeneral">
+
+          <h5 class="mb-3">Detalles ({{r.senal}})</h5>
+
+          <!-- NAVE + SEÑAL -->
+          <div class="row g-3">
+
+            <div class="col-md-4">
+              <div class="input-group">
+                <span class="input-group-text"><strong>Nave</strong></span>
+                <input type="text"
+                       class="form-control"
+                       [value]="r.nombre"
+                       readonly>
+              </div>
+            </div>
+
+            <div class="col-md-4">
+              <div class="input-group">
+                <span class="input-group-text">
+                  <strong>Señal de llamada</strong>
+                </span>
+                <input type="text"
+                       class="form-control"
+                       [value]="r.senal"
+                       readonly>
+              </div>
+            </div>
+
+          </div>
+
+
+          <!-- PUERTOS -->
+          <h5 class="mt-4">
+            <span style="color:#dc3545">*</span> Puertos
+          </h5>
+
+          <div class="form-check mb-2">
+            <input class="form-check-input"
+                   type="checkbox"
+                   formControlName="enPuerto"
+                   [value]="1">
+            <span>Nave en puerto</span>
+          </div>
+
+          <span class="text-muted small">
+            Los puertos precargados se obtienen del sistema SIAN
+          </span>
+
+
+          <!-- CARDS -->
+          <div class="row mt-3" *ngIf="formGeneral.controls['enPuerto'].value==0" [formGroup]="puertosForm">
+
+            <!-- ZARPE -->
+            <div class="col-md-4">
+              <div class="puerto-card">
+
+                <div class="puerto-title">
+                  Zarpe
+                </div>
+
+                <div class="puerto-body">
+
+                  <label class="form-label small">País</label>
+                  <select class="form-select form-select-sm"
+                          formControlName="zarpePais"
+                          (change)="onPaisChange('zarpe')">
+                    <option *ngFor="let p of paises" [value]="p">
+                      {{p}}
+                    </option>
+                  </select>
+
+                  <label class="form-label small mt-2">Puerto</label>
+                  <select class="form-select form-select-sm"
+                          formControlName="zarpePuerto">
+                    <option
+                      *ngFor="let prt of (puertosPorPais[puertosForm.get('zarpePais')?.value] || [])"
+                      [value]="prt">
+                      {{prt}}
+                    </option>
+                  </select>
+
+                </div>
+              </div>
+            </div>
+
+
+            <!-- INTERMEDIO -->
+            <div class="col-md-4">
+              <div class="puerto-card">
+
+                <div class="puerto-title">
+                  Intermedio
+                </div>
+
+                <div class="puerto-body">
+
+                  <label class="form-label small">País</label>
+                  <select class="form-select form-select-sm"
+                          formControlName="intermedioPais"
+                          (change)="onPaisChange('intermedio')">
+                    <option *ngFor="let p of paises" [value]="p">
+                      {{p}}
+                    </option>
+                  </select>
+
+                  <label class="form-label small mt-2">Puerto</label>
+                  <select class="form-select form-select-sm"
+                          formControlName="intermedioPuerto">
+                    <option
+                      *ngFor="let prt of (puertosPorPais[puertosForm.get('intermedioPais')?.value] || [])"
+                      [value]="prt">
+                      {{prt}}
+                    </option>
+                  </select>
+
+                </div>
+              </div>
+            </div>
+
+
+            <!-- DESTINO -->
+            <div class="col-md-4">
+              <div class="puerto-card">
+
+                <div class="puerto-title">
+                  Destino
+                </div>
+
+                <div class="puerto-body">
+
+                  <label class="form-label small">País</label>
+                  <select class="form-select form-select-sm"
+                          formControlName="destinoPais"
+                          (change)="onPaisChange('destino')">
+                    <option *ngFor="let p of paises" [value]="p">
+                      {{p}}
+                    </option>
+                  </select>
+
+                  <label class="form-label small mt-2">Puerto</label>
+                  <select class="form-select form-select-sm"
+                          formControlName="destinoPuerto">
+                    <option
+                      *ngFor="let prt of (puertosPorPais[puertosForm.get('destinoPais')?.value] || [])"
+                      [value]="prt">
+                      {{prt}}
+                    </option>
+                  </select>
+
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <h5 class="mt-4">
+            Armador / Agencia / Responsable
+          </h5>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  </div> <!-- Cierre del acordeón -->
+
+</div>
+
+<!-- MODAL -->
+<div class="modal" [class.show]="mostrarModal" [style.display]="mostrarModal ? 'block' : 'none'" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Seleccionar Nave</h5>
+        <button type="button" class="btn-close" (click)="cerrarModal()"></button>
+      </div>
+      <div class="modal-body">
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th>Nombre</th>
+              <th>Señal</th>
+              <th>Acción</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let nave of navesDisponibles">
+              <td>{{nave.nombre}}</td>
+              <td>{{nave.senal}}</td>
+              <td>
+                <button class="btn btn-sm btn-primary" (click)="seleccionarNave(nave)">
+                  Seleccionar
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="cerrarModal()">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal-backdrop fade" [class.show]="mostrarModal" *ngIf="mostrarModal"></div>
