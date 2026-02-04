@@ -1,0 +1,128 @@
+<div class="componente">
+  <h2>{{ titulo }}</h2>
+<form [formGroup]="reparticionesForm">
+
+  <div class="card card-sar">
+    <div class="card-header card-sar-header">
+      <span class="title">Reparticiones Activadas</span>
+    </div>
+
+    <div class="card-body">
+
+      <div class="mb-2 text-muted small">
+        Reparticiones Activadas - MRCC, MRSC, Zonas Navales, Capuertos,Faros
+      </div>
+
+      <!-- fila principal: select + agregar + chips -->
+      <div class="row g-2 align-items-center">
+
+        <div class="col-md-2">
+          <input class="form-control form-control-sm" value="Seleccione" disabled>
+        </div>
+
+        <div class="col-md-6">
+          <select class="form-select form-select-sm" formControlName="reparticion">
+            <option value="">Seleccione</option>
+            <option *ngFor="let r of listaReparticiones" [value]="r">{{ r }}</option>
+          </select>
+        </div>
+
+        <div class="col-md-2">
+          <button type="button"
+                  class="btn btn-light btn-sm w-100 btn-agregar"
+                  (click)="agregarReparticion()">
+            Agregar +
+          </button>
+        </div>
+
+        <div class="col-md-2 text-end">
+          <div class="chips-wrap">
+            <span *ngFor="let rep of reparticiones; let i=index"
+                  class="chip">
+              {{ rep }}
+              <button type="button" class="chip-del" (click)="eliminarReparticion(i)">Eliminar</button>
+            </span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- pregunta -->
+      <div class="row g-2 align-items-center mt-3">
+        <div class="col-md-6">
+          <label class="form-label mb-0">
+            ¿Zona Naval Asume Control como MRCC ?
+          </label>
+        </div>
+
+        <div class="col-md-2">
+          <select class="form-select form-select-sm select-si-no"
+                  formControlName="zonaControl">
+            <option value="No">No</option>
+            <option value="Si">Sí</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- ✅ fila condicional (solo si es "Si") -->
+      <div class="row g-2 align-items-center mt-3"
+           *ngIf="reparticionesForm.get('zonaControl')?.value === 'Si'">
+
+        <!-- Zona Naval -->
+        <div class="col-md-4">
+          <div class="input-group input-group-sm">
+            <span class="input-group-text w-label">Zona Naval</span>
+            <select class="form-select" formControlName="zonaNaval">
+              <option value="">Seleccione</option>
+              <option *ngFor="let z of zonasNavales" [value]="z">{{ z }}</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Fecha y Hora -->
+        <div class="col-md-4">
+          <div class="input-group input-group-sm">
+            <span class="input-group-text w-label">Fecha y Hora Toma Control</span>
+
+            <!-- si quieres EXACTO dd-mm-aaaa, dime y lo hacemos con máscara.
+                 Por defecto, lo más estable es datetime-local -->
+            <input class="form-control"
+                   type="datetime-local"
+                   formControlName="fechaHoraTomaControl">
+          </div>
+        </div>
+
+        <!-- N° Mensaje Naval -->
+        <div class="col-md-4">
+          <div class="input-group input-group-sm">
+            <span class="input-group-text w-label">N° Mensaje Naval</span>
+            <input class="form-control"
+                   type="text"
+                   formControlName="nroMensajeNaval"
+                   placeholder="Ejemplo: R 200450">
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <!-- botones -->
+  <div class="text-center mt-4">
+    <button type="button" class="btn btn-info btn-sm me-2">Vista previa</button>
+    <button type="button" class="btn btn-primary btn-sm">Activar Mensaje</button>
+  </div>
+
+</form>
+
+
+
+
+
+
+
+
+
+
+</div>
