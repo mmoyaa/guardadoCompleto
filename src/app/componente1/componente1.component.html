@@ -76,3 +76,28 @@
 </div>
 
 </div>
+
+
+<span>
+  El problema de que el mapa se vea "a cuadros" o separado en otro equipo casi siempre se debe a que el CSS de Leaflet no se está cargando correctamente.
+
+En styles.css tienes:
+
+Esta línea necesita que el paquete leaflet esté instalado en node_modules.
+
+En el equipo que NO funciona, asegúrate de:
+
+Instalar las dependencias:
+Verificar que leaflet esté instalado:
+Si no está instalado, instalarlo:
+Limpiar caché y reconstruir:
+Causa del problema:
+
+En el equipo donde funciona: node_modules/leaflet/dist/leaflet.css existe
+En el equipo donde no funciona: ese archivo no existe porque no se ejecutó npm install
+Solución alternativa (si aún no funciona):
+
+También podrías cargar el CSS directamente desde un CDN en index.html:
+
+Pero la mejor práctica es tener las dependencias correctamente instaladas con npm.
+</span>
