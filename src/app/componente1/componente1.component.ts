@@ -77,7 +77,7 @@ export class Componente1Component  implements AfterViewInit, OnDestroy{
 
   private initMap() {
     const L = this.L!;
-    this.map = L.map('map', { zoomControl: true }).setView([-33.45, -70.66], 10); // fallback
+    this.map = L.map('map', { zoomControl: true }).setView([-33.45, -70.66], 12); // fallback
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 19,
@@ -117,7 +117,7 @@ export class Componente1Component  implements AfterViewInit, OnDestroy{
         this.myMarker.setOpacity(1);
 
         // al iniciar: centrar en mi ubicación
-        this.map.setView(this.myLatLng, 13);
+        this.map.setView(this.myLatLng, 15);
       },
       (err) => {
         // si el usuario niega permisos, no pasa nada: queda el fallback
@@ -129,7 +129,7 @@ export class Componente1Component  implements AfterViewInit, OnDestroy{
 
   irAMiUbicacion() {
     if (!this.myLatLng) return;
-    this.map.setView(this.myLatLng, 13);
+    this.map.setView(this.myLatLng, 18);
     this.myMarker.openPopup();
   }
 
@@ -153,7 +153,7 @@ export class Componente1Component  implements AfterViewInit, OnDestroy{
     this.marker.setLatLng(ll);
 
     if (recenter) {
-      this.map.setView(ll, 13);
+      this.map.setView(ll, 15);
       this.marker.openPopup();
     }
   }

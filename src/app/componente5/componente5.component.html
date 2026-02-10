@@ -1,0 +1,367 @@
+<form [formGroup]="operacionesFuturasForm" class="componente">
+
+  <div class="mb-2 text-muted small">
+    <h3>Operaciones Futuras</h3>
+  </div>
+
+  <!-- =========================
+       CABECERA (form principal)
+  ========================== -->
+  <ng-container [ngSwitch]="layoutActual">
+
+    <!-- ===== Layout A: ETD + Detalle derecha + ETA debajo ETD + botón ===== -->
+    <ng-container *ngSwitchCase="'A'">
+      <ng-container *ngTemplateOutlet="layoutAForm"></ng-container>
+    </ng-container>
+
+    <!-- ===== Layout B: ETD + ETA misma fila + botón + Detalle abajo ===== -->
+    <ng-container *ngSwitchCase="'B'">
+      <ng-container *ngTemplateOutlet="layoutBForm"></ng-container>
+    </ng-container>
+
+    <!-- ===== Layout C: Select + ETD + botón (simple) ===== -->
+    <ng-container *ngSwitchCase="'C'">
+      <ng-container *ngTemplateOutlet="layoutCForm"></ng-container>
+    </ng-container>
+
+    <!-- ===== Layout D: FC Acción + Detalle + botón (como tu foto value=4) ===== -->
+    <ng-container *ngSwitchCase="'D'">
+      <ng-container *ngTemplateOutlet="layoutDForm"></ng-container>
+    </ng-container>
+
+    <!-- Default -->
+    <ng-container *ngSwitchDefault>
+      <div class="alert alert-warning">
+        Selecciona un tipo de actividad para mostrar el formulario.
+      </div>
+
+      <ng-container *ngTemplateOutlet="layoutDForm"></ng-container>
+    </ng-container>
+
+  </ng-container>
+
+
+  <!-- =========================
+       LISTA AGREGADA (barras naranjas)
+  ========================== -->
+  <div class="mt-3" formArrayName="reparticiones">
+    <div *ngFor="let fg of reparticionesFA.controls; let i = index" class="mb-3">
+
+      <!-- Barra naranja -->
+      <div class="rep-header d-flex align-items-center justify-content-between"
+           (click)="toggle(i)">
+
+        <div class="rep-title">
+          {{ fg.get('nombre')?.value }}
+        </div>
+
+        <button type="button"
+                class="btn btn-danger btn-sm"
+                (click)="eliminarReparticion(i); $event.stopPropagation()">
+          Eliminar
+        </button>
+      </div>
+
+      <!-- Cuerpo -->
+      <div class="rep-body" *ngIf="isOpen(i)" [formGroupName]="i">
+
+        <ng-container [ngSwitch]="fg.get('layout')?.value">
+
+          <!-- ===== Item Layout A ===== -->
+          <ng-container *ngSwitchCase="'A'">
+            <div class="row g-2 align-items-center">
+              <div class="col-md-3">
+                <div class="input-group input-group-lg">
+                  <span class="input-group-text">ETD</span>
+                  <input type="datetime-local" class="form-control" formControlName="fechaETD">
+                </div>
+              </div>
+
+              <div class="col-md-3">
+                <div class="input-group input-group-lg">
+                  <span class="input-group-text">ETA</span>
+                  <input type="datetime-local" class="form-control" formControlName="fechaETA">
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <div class="input-group input-group-lg">
+                  <span class="input-group-text">Detalle</span>
+                  <textarea class="form-control textarea-lg"
+                            formControlName="detalle"
+                            [attr.maxlength]="maxCaracteres"></textarea>
+                </div>
+                <small class="text-muted">
+                  Le quedan {{ maxCaracteres - ((fg.get('detalle')?.value || '').length) }} caracteres.
+                </small>
+              </div>
+            </div>
+          </ng-container>
+
+          <!-- ===== Item Layout B ===== -->
+          <ng-container *ngSwitchCase="'B'">
+            <div class="row g-2 align-items-center">
+              <div class="col-md-3">
+                <div class="input-group input-group-lg">
+                  <span class="input-group-text">ETD</span>
+                  <input type="datetime-local" class="form-control" formControlName="fechaETD">
+                </div>
+              </div>
+
+              <div class="col-md-3">
+                <div class="input-group input-group-lg">
+                  <span class="input-group-text">ETA</span>
+                  <input type="datetime-local" class="form-control" formControlName="fechaETA">
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <div class="input-group input-group-lg">
+                  <span class="input-group-text">Detalle</span>
+                  <textarea class="form-control" rows="2"
+                            formControlName="detalle"
+                            [attr.maxlength]="maxCaracteres"></textarea>
+                </div>
+                <small class="text-muted">
+                  Le quedan {{ maxCaracteres - ((fg.get('detalle')?.value || '').length) }} caracteres.
+                </small>
+              </div>
+            </div>
+          </ng-container>
+
+          <!-- ===== Item Layout C ===== -->
+          <ng-container *ngSwitchCase="'C'">
+            <div class="row g-2 align-items-center">
+              <div class="col-md-4">
+                <div class="input-group input-group-lg">
+                  <span class="input-group-text">ETD</span>
+                  <input type="datetime-local" class="form-control" formControlName="fechaETD">
+                </div>
+              </div>
+
+              <div class="col-md-8">
+                <div class="input-group input-group-lg">
+                  <span class="input-group-text">Detalle</span>
+                  <textarea class="form-control" rows="1"
+                            formControlName="detalle"
+                            [attr.maxlength]="maxCaracteres"></textarea>
+                </div>
+                <small class="text-muted">
+                  Le quedan {{ maxCaracteres - ((fg.get('detalle')?.value || '').length) }} caracteres.
+                </small>
+              </div>
+            </div>
+          </ng-container>
+
+          <!-- ===== Item Layout D (FC Acción + Detalle) ===== -->
+          <ng-container *ngSwitchCase="'D'">
+            <div class="row g-2 align-items-center">
+              <div class="col-md-4">
+                <div class="input-group input-group-lg">
+                  <span class="input-group-text">FC Acción</span>
+                  <input type="datetime-local" class="form-control" formControlName="fechaAccion">
+                </div>
+              </div>
+
+              <div class="col-md-8">
+                <div class="input-group input-group-lg">
+                  <span class="input-group-text">Detalle</span>
+                  <input type="text"
+                         class="form-control"
+                         formControlName="detalle"
+                         [attr.maxlength]="maxCaracteres" />
+                </div>
+                <small class="text-muted">
+                  Le quedan {{ maxCaracteres - ((fg.get('detalle')?.value || '').length) }} caracteres.
+                </small>
+              </div>
+            </div>
+          </ng-container>
+
+          <!-- Default -->
+          <ng-container *ngSwitchDefault>
+            <div class="alert alert-secondary">
+              Layout no definido para este item.
+            </div>
+          </ng-container>
+
+        </ng-container>
+
+      </div>
+    </div>
+  </div>
+
+</form>
+
+
+<!-- =========================================================
+     TEMPLATES FORM PRINCIPAL (CABECERA)
+========================================================= -->
+
+<!-- ===== SELECT reutilizable ===== -->
+<ng-template #selectActividad>
+  <div class="col-md-4">
+    <select class="form-select form-select-lg" formControlName="reparticion">
+      <option value="" disabled>Seleccione</option>
+
+      <option *ngFor="let a of actividades"
+              [value]="a.id"
+              [attr.idmedio]="a.idmedio"
+              [attr.glmedio]="a.glmedio">
+        {{ a.nombre }}
+      </option>
+    </select>
+  </div>
+</ng-template>
+
+
+<!-- ===== FORM Layout A ===== -->
+<ng-template #layoutAForm>
+  <div class="row g-2 align-items-center">
+
+    <ng-container *ngTemplateOutlet="selectActividad"></ng-container>
+
+    <div class="col-md-3">
+      <div class="input-group input-group-lg">
+        <span class="input-group-text">Fecha ETD</span>
+        <input type="datetime-local" class="form-control" formControlName="fechaETD">
+      </div>
+    </div>
+
+    <div class="col-md-5">
+      <div class="input-group input-group-lg">
+        <span class="input-group-text">Detalle</span>
+        <textarea class="form-control textarea-lg"
+                  formControlName="detalle"
+                  [attr.maxlength]="maxCaracteres"></textarea>
+      </div>
+      <small class="text-muted">
+        Le quedan {{ caracteresRestantesForm }} caracteres.
+      </small>
+    </div>
+
+    <div class="col-md-4"></div>
+    <div class="col-md-3">
+      <div class="input-group input-group-lg">
+        <span class="input-group-text">Fecha ETA</span>
+        <input type="datetime-local" class="form-control" formControlName="fechaETA">
+      </div>
+    </div>
+    <div class="col-md-5"></div>
+
+    <div class="col-md-4"></div>
+    <div class="col-md-3 d-grid">
+      <button type="button" class="btn btn-primary btn-lg"
+              (click)="agregarReparticion()">
+        Agregar +
+      </button>
+    </div>
+    <div class="col-md-5"></div>
+
+  </div>
+</ng-template>
+
+
+<!-- ===== FORM Layout B ===== -->
+<ng-template #layoutBForm>
+  <div class="row g-2 align-items-center">
+
+    <ng-container *ngTemplateOutlet="selectActividad"></ng-container>
+
+    <div class="col-md-3">
+      <div class="input-group input-group-lg">
+        <span class="input-group-text">Fecha ETD</span>
+        <input type="datetime-local" class="form-control" formControlName="fechaETD">
+      </div>
+    </div>
+
+    <div class="col-md-3">
+      <div class="input-group input-group-lg">
+        <span class="input-group-text">Fecha ETA</span>
+        <input type="datetime-local" class="form-control" formControlName="fechaETA">
+      </div>
+    </div>
+
+    <div class="col-md-2 d-grid">
+      <button type="button" class="btn btn-primary btn-lg"
+              (click)="agregarReparticion()">
+        Agregar +
+      </button>
+    </div>
+
+    <div class="col-12">
+      <div class="input-group input-group-lg">
+        <span class="input-group-text">Detalle</span>
+        <textarea class="form-control" rows="2"
+                  formControlName="detalle"
+                  [attr.maxlength]="maxCaracteres"></textarea>
+      </div>
+      <small class="text-muted">
+        Le quedan {{ caracteresRestantesForm }} caracteres.
+      </small>
+    </div>
+
+  </div>
+</ng-template>
+
+
+<!-- ===== FORM Layout C ===== -->
+<ng-template #layoutCForm>
+  <div class="row g-2 align-items-center">
+
+    <ng-container *ngTemplateOutlet="selectActividad"></ng-container>
+
+    <div class="col-md-3">
+      <div class="input-group input-group-lg">
+        <span class="input-group-text">Fecha ETD</span>
+        <input type="datetime-local" class="form-control" formControlName="fechaETD">
+      </div>
+    </div>
+
+    <div class="col-md-3 d-grid">
+      <button type="button" class="btn btn-primary btn-lg"
+              (click)="agregarReparticion()">
+        Agregar +
+      </button>
+    </div>
+
+  </div>
+</ng-template>
+
+
+<!-- ===== FORM Layout D (FC Acción + Detalle + botón) ===== -->
+<ng-template #layoutDForm>
+  <div class="row g-2 align-items-center">
+
+    <ng-container *ngTemplateOutlet="selectActividad"></ng-container>
+
+    <div class="col-md-3">
+      <div class="input-group input-group-lg">
+        <span class="input-group-text">Fecha y Hora Acción</span>
+        <input type="datetime-local" class="form-control" formControlName="fechaAccion">
+      </div>
+    </div>
+
+    <div class="col-md-3">
+      <div class="input-group input-group-lg">
+        <span class="input-group-text">Detalle</span>
+        <input type="text"
+               class="form-control"
+               formControlName="detalle"
+               [attr.maxlength]="maxCaracteres" />
+      </div>
+
+      <small class="text-muted">
+        Le quedan {{ caracteresRestantesForm }} caracteres.
+      </small>
+    </div>
+
+    <div class="col-md-2 d-grid">
+      <button type="button" class="btn btn-primary btn-lg"
+              (click)="agregarReparticion()">
+        Agregar +
+      </button>
+    </div>
+
+  </div>
+</ng-template>
