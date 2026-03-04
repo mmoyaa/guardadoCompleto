@@ -1,0 +1,57 @@
+<div class="componente6-container">
+  <h2>{{ titulo }}</h2>
+  <p class="descripcion">Ingresa tu RUT para buscar solicitudes de acceso o generar una nueva</p>
+
+  <div class="form-group">
+    <label for="rutInput">RUT:</label>
+    <input
+      id="rutInput"
+      type="text"
+      [(ngModel)]="rut"
+      placeholder="Ejemplo: 12.345.678-9"
+      class="input-field"
+      [disabled]="cargando"
+    />
+    <small class="help-text">Formato: XX.XXX.XXX-X o XXXXXXXX-X</small>
+  </div>
+
+  <div class="button-group">
+    <button
+      (click)="buscarRut()"
+      [disabled]="cargando || !rut.trim()"
+      class="btn btn-primary"
+    >
+      {{ cargando ? 'Procesando...' : 'Buscar/Registrar RUT' }}
+    </button>
+    <button
+      (click)="limpiarFormulario()"
+      [disabled]="cargando"
+      class="btn btn-secondary"
+    >
+      Limpiar
+    </button>
+  </div>
+
+  <!-- Mensaje de error -->
+  <div *ngIf="error" class="alert alert-error">
+    <strong>Error:</strong> {{ error }}
+  </div>
+
+  <!-- Mensaje de RUT existente -->
+  <div *ngIf="rutExiste && !exito" class="alert alert-info">
+    <strong>Información:</strong> {{ mensaje }}
+  </div>
+
+  <!-- Mensaje de éxito -->
+  <div *ngIf="exito" class="alert alert-success">
+    <strong>¡Éxito!</strong> {{ mensaje }}
+    <p>Se envió un correo de confirmación.</p>
+  </div>
+
+  <!-- Spinner de carga -->
+  <div *ngIf="cargando" class="spinner">
+    <div class="spinner-border"></div>
+    <p>Procesando solicitud...</p>
+  </div>
+</div>
+
